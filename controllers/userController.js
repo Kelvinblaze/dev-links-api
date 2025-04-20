@@ -63,6 +63,28 @@ const updateUserProfile = async (req, res, next) => {
   }
 };
 
+// Get User Links
+const getUserLinks = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user.links,
+      message: "Successfully fetched user links",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Update user links
 const updateUserLinks = async (req, res, next) => {
   try {
@@ -91,4 +113,4 @@ const updateUserLinks = async (req, res, next) => {
   }
 };
 
-export { getUserProfile, updateUserProfile, updateUserLinks };
+export { getUserProfile, updateUserProfile, updateUserLinks, getUserLinks };
