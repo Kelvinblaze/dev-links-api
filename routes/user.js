@@ -8,15 +8,17 @@ import {
   updateUserProfile,
   updateUserLinks,
   getUserLinks,
+  getUserById,
 } from "../controllers/userController.js";
 
 router.get("/", checkAuth, getUserProfile);
+
+router.get("/:id", getUserById);
 
 router.put("/update", checkAuth, updateUserProfile);
 
 router.get("/links", checkAuth, getUserLinks);
 
 router.put("/links", checkAuth, updateUserLinks);
-
 
 export default router;
