@@ -16,7 +16,7 @@ router.get("/", checkAuth, getUserProfile);
 
 router.get("/:id", getUserById);
 
-router.get("/:username", getUserByUsername);
+router.get("/username/:username", getUserByUsername);
 
 router.put("/update", checkAuth, updateUserProfile);
 
