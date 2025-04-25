@@ -40,6 +40,32 @@ const getUserById = async (req, res, next) => {
   }
 };
 
+const getUserByUsername = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        photo: user.photo,
+        links: user.links,
+      },
+      message: "Successfully fetched user profile",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Update user profile
 const updateUserProfile = async (req, res, next) => {
   try {
@@ -145,4 +171,5 @@ export {
   updateUserLinks,
   getUserLinks,
   getUserById,
+  getUserByUsername,
 };

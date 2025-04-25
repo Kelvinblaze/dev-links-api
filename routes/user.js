@@ -9,11 +9,14 @@ import {
   updateUserLinks,
   getUserLinks,
   getUserById,
+  getUserByUsername,
 } from "../controllers/userController.js";
 
 router.get("/", checkAuth, getUserProfile);
 
 router.get("/:id", getUserById);
+
+router.get("/:username", getUserByUsername);
 
 router.put("/update", checkAuth, updateUserProfile);
 
