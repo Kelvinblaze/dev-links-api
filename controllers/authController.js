@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import sendEmail from "../utils/mailer.js"; // Assuming you have a mailer utility for sending emails
 
 dotenv.config();
 
@@ -27,13 +28,11 @@ const Login = async (req, res, next) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRATION,
     });
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: { token, user },
-        message: "Login successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: { token, user },
+      message: "Login successfully",
+    });
   } catch (error) {
     next(error);
   }
@@ -71,6 +70,31 @@ const Register = async (req, res, next) => {
     });
 
     await newUser.save();
+
+    // Send email asynchronously
+    setImmediate(async () => {
+      try {
+        await sendEmail(
+          email,
+          "Welcome to Devlinks!",
+          `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <h1 style="color: #633CFF;">Welcome to Devlinks!</h1>
+            <p>Hi there,</p>
+            <p>Thank you for signing up for Devlinks. We're excited to have you on board!</p>
+            <p>With Devlinks, you can easily manage and share your links with others. Start exploring and make the most out of your experience.</p>
+            <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+            <p>Best regards,</p>
+            <p>The Devlinks Team</p>
+            <hr />
+            <p style="font-size: 12px; color: #888;">If you did not sign up for Devlinks, please ignore this email.</p>
+          </div>
+        `
+        );
+      } catch (error) {
+        console.error("Failed to send welcome email:", error.message);
+      }
+    });
 
     // Return response
     res.status(201).json({
